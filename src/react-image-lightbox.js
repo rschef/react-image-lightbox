@@ -60,9 +60,9 @@ class ReactImageLightbox extends Component {
   }
 
   // Request to transition to the previous image
-  static getTransform({ x = 0, y = 0, zoom = 1, width, targetWidth }) {
+  static getTransform({ x = 0, y = 0, zoom = 1, width, targetWidth, sideBarWidth }) {
     let nextX = x;
-    const windowWidth = getWindowWidth() - this.props.sideBarWidth;
+    const windowWidth = getWindowWidth() - sideBarWidth;
     if (width > windowWidth) {
       nextX += (windowWidth - width) / 2;
     }
@@ -1262,6 +1262,7 @@ class ReactImageLightbox extends Component {
       onAfterOpen,
       imageCrossOrigin,
       reactModalProps,
+      sideBarWidth,
     } = this.props;
     const {
       zoomLevel,
@@ -1302,6 +1303,7 @@ class ReactImageLightbox extends Component {
         ...ReactImageLightbox.getTransform({
           ...transforms,
           ...bestImageInfo,
+          sideBarWidth,
         }),
       };
 
