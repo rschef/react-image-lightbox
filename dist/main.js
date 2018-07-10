@@ -516,14 +516,15 @@
      */                }, {
                     key: "getLightboxRect",
                     value: function() {
-                        return this.outerEl ? this.outerEl.getBoundingClientRect() : {
+                        return this.outerEl ? this.outerEl.getBoundingClientRect() : (console.log(this.props.toolbarHeight), 
+                        {
                             width: (0, _util.getWindowWidth)() - this.props.sideBarWidth,
-                            height: (0, _util.getWindowHeight)(),
+                            height: (0, _util.getWindowHeight)() - this.props.toolbarHeight,
                             top: 0,
                             right: 0,
                             bottom: 0,
                             left: 0
-                        };
+                        });
                     }
                 }, {
                     key: "clearTimeout",
@@ -1386,6 +1387,7 @@
                 imagePadding: _propTypes2.default.number,
                 wrapperClassName: _propTypes2.default.string,
                 sideBarWidth: _propTypes2.default.number,
+                toolbarHeight: _propTypes2.default.number,
                 //-----------------------------
                 // Other
                 //-----------------------------
@@ -1437,7 +1439,8 @@
                 zoomInLabel: "Zoom in",
                 zoomOutLabel: "Zoom out",
                 imageLoadErrorMessage: "This image failed to load",
-                sideBarWidth: 0
+                sideBarWidth: 0,
+                toolbarHeight: 0
             }, exports.default = ReactImageLightbox;
         }).call(this, __webpack_require__(0))
         /***/;

@@ -36,6 +36,7 @@ export interface ILightBoxProps {
     zoomOutLabel?: string;
     closeLabel?: string;
     sideBarWidth?: number;
+    toolbarHeight?: number;
 }
 
 export default class Lightbox extends React.Component<ILightBoxProps, never> { }
