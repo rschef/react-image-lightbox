@@ -60,13 +60,18 @@ class ReactImageLightbox extends Component {
   }
 
   // Request to transition to the previous image
-  static getTransform({ x = 0, y = 0, zoom = 1, width, targetWidth, sideBarWidth, }) {
+  static getTransform({
+    x = 0, y = 0, zoom = 1, width, height, targetWidth, targetHeight, sideBarWidth, toolbarHeight,
+  }) {
     let nextX = x;
     const windowWidth = getWindowWidth() - sideBarWidth;
     if (width > windowWidth) {
       nextX += (windowWidth - width) / 2;
     }
-    const scaleFactor = zoom * (targetWidth / width);
+    const scaleWidthFactor = zoom * (targetWidth / width);
+    const scaleHeightFactor = zoom * ((targetHeight - toolbarHeight) / height);
+
+    const scaleFactor = Math.min(scaleWidthFactor, scaleHeightFactor);
 
     return {
       transform: `translate3d(${nextX}px,${y}px,0) scale3d(${scaleFactor},${scaleFactor},1)`,
@@ -412,7 +417,7 @@ class ReactImageLightbox extends Component {
     if (this.outerEl) {
       return this.outerEl.getBoundingClientRect();
     }
-    console.log(this.props.toolbarHeight)
+
     return {
       width: getWindowWidth() - this.props.sideBarWidth,
       height: getWindowHeight() - this.props.toolbarHeight,
@@ -1263,6 +1268,7 @@ class ReactImageLightbox extends Component {
       imageCrossOrigin,
       reactModalProps,
       sideBarWidth,
+      toolbarHeight,
     } = this.props;
     const {
       zoomLevel,
@@ -1304,6 +1310,7 @@ class ReactImageLightbox extends Component {
           ...transforms,
           ...bestImageInfo,
           sideBarWidth,
+          toolbarHeight,
         }),
       };
 

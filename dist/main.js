@@ -298,10 +298,10 @@
                                 }, {
                     key: "getTransform",
                     value: function(_ref) {
-                        var _ref$x = _ref.x, x = void 0 === _ref$x ? 0 : _ref$x, _ref$y = _ref.y, y = void 0 === _ref$y ? 0 : _ref$y, _ref$zoom = _ref.zoom, zoom = void 0 === _ref$zoom ? 1 : _ref$zoom, width = _ref.width, targetWidth = _ref.targetWidth, sideBarWidth = _ref.sideBarWidth, nextX = x, windowWidth = (0, 
+                        var _ref$x = _ref.x, x = void 0 === _ref$x ? 0 : _ref$x, _ref$y = _ref.y, y = void 0 === _ref$y ? 0 : _ref$y, _ref$zoom = _ref.zoom, zoom = void 0 === _ref$zoom ? 1 : _ref$zoom, width = _ref.width, height = _ref.height, targetWidth = _ref.targetWidth, targetHeight = _ref.targetHeight, sideBarWidth = _ref.sideBarWidth, toolbarHeight = _ref.toolbarHeight, nextX = x, windowWidth = (0, 
                         _util.getWindowWidth)() - sideBarWidth;
                         width > windowWidth && (nextX += (windowWidth - width) / 2);
-                        var scaleFactor = zoom * (targetWidth / width);
+                        var scaleWidthFactor = zoom * (targetWidth / width), scaleHeightFactor = zoom * ((targetHeight - toolbarHeight) / height), scaleFactor = Math.min(scaleWidthFactor, scaleHeightFactor);
                         return {
                             transform: "translate3d(" + nextX + "px," + y + "px,0) scale3d(" + scaleFactor + "," + scaleFactor + ",1)"
                         };
@@ -516,15 +516,14 @@
      */                }, {
                     key: "getLightboxRect",
                     value: function() {
-                        return this.outerEl ? this.outerEl.getBoundingClientRect() : (console.log(this.props.toolbarHeight), 
-                        {
+                        return this.outerEl ? this.outerEl.getBoundingClientRect() : {
                             width: (0, _util.getWindowWidth)() - this.props.sideBarWidth,
                             height: (0, _util.getWindowHeight)() - this.props.toolbarHeight,
                             top: 0,
                             right: 0,
                             bottom: 0,
                             left: 0
-                        });
+                        };
                     }
                 }, {
                     key: "clearTimeout",
@@ -1081,7 +1080,7 @@
                 }, {
                     key: "render",
                     value: function() {
-                        var _this16 = this, _props = this.props, animationDisabled = _props.animationDisabled, animationDuration = _props.animationDuration, clickOutsideToClose = _props.clickOutsideToClose, discourageDownloads = _props.discourageDownloads, enableZoom = _props.enableZoom, imageTitle = _props.imageTitle, nextSrc = _props.nextSrc, prevSrc = _props.prevSrc, toolbarButtons = _props.toolbarButtons, reactModalStyle = _props.reactModalStyle, _onAfterOpen = _props.onAfterOpen, imageCrossOrigin = _props.imageCrossOrigin, reactModalProps = _props.reactModalProps, sideBarWidth = _props.sideBarWidth, _state = this.state, zoomLevel = _state.zoomLevel, offsetX = _state.offsetX, offsetY = _state.offsetY, isClosing = _state.isClosing, loadErrorStatus = _state.loadErrorStatus, boxSize = this.getLightboxRect(), transitionStyle = {};
+                        var _this16 = this, _props = this.props, animationDisabled = _props.animationDisabled, animationDuration = _props.animationDuration, clickOutsideToClose = _props.clickOutsideToClose, discourageDownloads = _props.discourageDownloads, enableZoom = _props.enableZoom, imageTitle = _props.imageTitle, nextSrc = _props.nextSrc, prevSrc = _props.prevSrc, toolbarButtons = _props.toolbarButtons, reactModalStyle = _props.reactModalStyle, _onAfterOpen = _props.onAfterOpen, imageCrossOrigin = _props.imageCrossOrigin, reactModalProps = _props.reactModalProps, sideBarWidth = _props.sideBarWidth, toolbarHeight = _props.toolbarHeight, _state = this.state, zoomLevel = _state.zoomLevel, offsetX = _state.offsetX, offsetY = _state.offsetY, isClosing = _state.isClosing, loadErrorStatus = _state.loadErrorStatus, boxSize = this.getLightboxRect(), transitionStyle = {};
                         // Transition settings for sliding animations
                         !animationDisabled && this.isAnimating() && (transitionStyle = _extends({}, transitionStyle, {
                             transition: "transform " + animationDuration + "ms"
@@ -1097,7 +1096,8 @@
                             // Ignore types that have no source defined for their full size image
                             if (_this16.props[srcType]) {
                                 var bestImageInfo = _this16.getBestImageForType(srcType), imageStyle = _extends({}, transitionStyle, ReactImageLightbox.getTransform(_extends({}, transforms, bestImageInfo, {
-                                    sideBarWidth: sideBarWidth
+                                    sideBarWidth: sideBarWidth,
+                                    toolbarHeight: toolbarHeight
                                 })));
                                 zoomLevel > _constant.MIN_ZOOM_LEVEL && (imageStyle.cursor = "move");
                                 // support IE 9 and 11
