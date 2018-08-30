@@ -1031,20 +1031,23 @@
                                 }, {
                     key: "requestClose",
                     value: function(event) {
-                        var _this14 = this, closeLightbox = function() {
-                            return _this14.props.onCloseRequest(event);
-                        };
-                        // Call the parent close request
-                                                this.props.animationDisabled || "keydown" === event.type && !this.props.animationOnKeyInput ? 
-                        // No animation
-                        closeLightbox() : (
-                        // With animation
-                        // Start closing animation
-                        this.setState({
-                            isClosing: !0
-                        }), 
-                        // Perform the actual closing at the end of the animation
-                        this.setTimeout(closeLightbox, this.props.animationDuration));
+                        var _this14 = this;
+                        if (!this.props.neverCloses) {
+                            // Call the parent close request
+                            var closeLightbox = function() {
+                                return _this14.props.onCloseRequest(event);
+                            };
+                            if (this.props.animationDisabled || "keydown" === event.type && !this.props.animationOnKeyInput) 
+                            // No animation
+                            return void closeLightbox();
+                            // With animation
+                            // Start closing animation
+                                                        this.setState({
+                                isClosing: !0
+                            }), 
+                            // Perform the actual closing at the end of the animation
+                            this.setTimeout(closeLightbox, this.props.animationDuration);
+                        }
                     }
                 }, {
                     key: "requestMove",
@@ -1273,7 +1276,7 @@
                             className: [ "ril-zoom-out", "ril__toolbarItemChild", "ril__builtinButton", "ril__zoomOutButton" ].concat(_toConsumableArray(zoomLevel === _constant.MIN_ZOOM_LEVEL ? [ "ril__builtinButtonDisabled" ] : [])).join(" "),
                             disabled: this.isAnimating() || zoomLevel === _constant.MIN_ZOOM_LEVEL,
                             onClick: this.isAnimating() || zoomLevel === _constant.MIN_ZOOM_LEVEL ? void 0 : this.handleZoomOutButtonClick
-                        })), _react2.default.createElement("li", {
+                        })), !this.props.neverCloses && _react2.default.createElement("li", {
                             className: "ril-toolbar__item ril__toolbarItem"
                         }, _react2.default.createElement("button", {
                             // Lightbox close button
@@ -1405,7 +1408,8 @@
                 zoomInLabel: _propTypes2.default.string,
                 zoomOutLabel: _propTypes2.default.string,
                 closeLabel: _propTypes2.default.string,
-                imageLoadErrorMessage: _propTypes2.default.node
+                imageLoadErrorMessage: _propTypes2.default.node,
+                neverCloses: _propTypes2.default.bool
             }, ReactImageLightbox.defaultProps = {
                 imageTitle: null,
                 imageCaption: null,
@@ -1440,7 +1444,8 @@
                 zoomOutLabel: "Zoom out",
                 imageLoadErrorMessage: "This image failed to load",
                 sideBarWidth: 0,
-                toolbarHeight: 0
+                toolbarHeight: 0,
+                neverCloses: !1
             }, exports.default = ReactImageLightbox;
         }).call(this, __webpack_require__(0))
         /***/;

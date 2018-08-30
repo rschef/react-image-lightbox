@@ -1188,24 +1188,26 @@ class ReactImageLightbox extends Component {
 
   // Request that the lightbox be closed
   requestClose(event) {
-    // Call the parent close request
-    const closeLightbox = () => this.props.onCloseRequest(event);
+    if (!this.props.neverCloses) {
+      // Call the parent close request
+      const closeLightbox = () => this.props.onCloseRequest(event);
 
-    if (
-      this.props.animationDisabled ||
-      (event.type === 'keydown' && !this.props.animationOnKeyInput)
-    ) {
-      // No animation
-      closeLightbox();
-      return;
+      if (
+        this.props.animationDisabled ||
+        (event.type === 'keydown' && !this.props.animationOnKeyInput)
+      ) {
+        // No animation
+        closeLightbox();
+        return;
+      }
+
+      // With animation
+      // Start closing animation
+      this.setState({ isClosing: true });
+
+      // Perform the actual closing at the end of the animation
+      this.setTimeout(closeLightbox, this.props.animationDuration);
     }
-
-    // With animation
-    // Start closing animation
-    this.setState({ isClosing: true });
-
-    // Perform the actual closing at the end of the animation
-    this.setTimeout(closeLightbox, this.props.animationDuration);
   }
 
   requestMove(direction, event) {
@@ -1581,15 +1583,17 @@ class ReactImageLightbox extends Component {
                 </li>
               )}
 
-              <li className="ril-toolbar__item ril__toolbarItem">
-                <button // Lightbox close button
-                  type="button"
-                  key="close"
-                  aria-label={this.props.closeLabel}
-                  className="ril-close ril-toolbar__item__child ril__toolbarItemChild ril__builtinButton ril__closeButton"
-                  onClick={!this.isAnimating() ? this.requestClose : undefined} // Ignore clicks during animation
-                />
-              </li>
+              {!this.props.neverCloses &&
+                <li className="ril-toolbar__item ril__toolbarItem">
+                  <button // Lightbox close button
+                    type="button"
+                    key="close"
+                    aria-label={this.props.closeLabel}
+                    className="ril-close ril-toolbar__item__child ril__toolbarItemChild ril__builtinButton ril__closeButton"
+                    onClick={!this.isAnimating() ? this.requestClose : undefined} // Ignore clicks during animation
+                  />
+                </li>
+              }
             </ul>
           </div>
 
@@ -1756,6 +1760,8 @@ ReactImageLightbox.propTypes = {
   closeLabel: PropTypes.string,
 
   imageLoadErrorMessage: PropTypes.node,
+
+  neverCloses: PropTypes.bool,
 };
 
 ReactImageLightbox.defaultProps = {
@@ -1793,6 +1799,7 @@ ReactImageLightbox.defaultProps = {
   imageLoadErrorMessage: 'This image failed to load',
   sideBarWidth: 0,
   toolbarHeight: 0,
+  neverCloses: false,
 };
 
 export default ReactImageLightbox;
