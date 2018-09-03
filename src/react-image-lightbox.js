@@ -136,6 +136,7 @@ class ReactImageLightbox extends Component {
     this.handleFullScreenButtonClick = this.handleFullScreenButtonClick.bind(this);
     this.openFullScreen = this.openFullScreen.bind(this);
     this.closeFullScreen = this.closeFullScreen.bind(this);
+    this.handleFullScreenChange = this.handleFullScreenChange.bind(this);
   }
 
   componentWillMount() {
@@ -215,6 +216,13 @@ class ReactImageLightbox extends Component {
       pointerup: this.handlePointerEvent,
       pointercancel: this.handlePointerEvent,
     };
+
+    ["", "webkit", "moz", "ms"].forEach(
+      prefix => {
+        this.listeners[prefix + "fullscreenchange"] = this.handleFullScreenChange;
+      }
+    );
+
     Object.keys(this.listeners).forEach(type => {
       this.windowContext.addEventListener(type, this.listeners[type]);
     });
@@ -1264,13 +1272,15 @@ class ReactImageLightbox extends Component {
   }
 
   handleFullScreenButtonClick() {
-    const { isFullScreen } = this.state;
-
-    if (isFullScreen) {
+    if (this.state.isFullScreen) {
       this.closeFullScreen();
     } else {
       this.openFullScreen();
     }
+  }
+
+  handleFullScreenChange() {
+    const { isFullScreen } = this.state;
 
     this.setState({
       isFullScreen: !isFullScreen,
@@ -1321,6 +1331,7 @@ class ReactImageLightbox extends Component {
       sideBarWidth,
       toolbarHeight,
       enableFullScreen,
+      imageHolderStyle,
     } = this.props;
     const {
       zoomLevel,
@@ -1533,6 +1544,7 @@ class ReactImageLightbox extends Component {
           <div // eslint-disable-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
             // Image holder
             className="ril-inner ril__inner"
+            style={isFullScreen ? {} : imageHolderStyle}
             onClick={clickOutsideToClose ? this.closeIfClickInner : undefined}
           >
             {images}
@@ -1835,6 +1847,8 @@ ReactImageLightbox.propTypes = {
   enableFullScreen: PropTypes.bool,
 
   fullScreenLabel: PropTypes.string,
+
+  imageHolderStyle: PropTypes.object,
 };
 
 ReactImageLightbox.defaultProps = {
@@ -1874,6 +1888,7 @@ ReactImageLightbox.defaultProps = {
   toolbarHeight: 0,
   neverCloses: false,
   enableFullScreen: true,
+  imageHolderStyle: {},
   fullScreenLabel: 'Toggle fullscreen',
 };
 

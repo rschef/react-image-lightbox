@@ -250,7 +250,7 @@
                     _this.requestClose = _this.requestClose.bind(_this), _this.requestMoveNext = _this.requestMoveNext.bind(_this), 
                     _this.requestMovePrev = _this.requestMovePrev.bind(_this), _this.handleFullScreenButtonClick = _this.handleFullScreenButtonClick.bind(_this), 
                     _this.openFullScreen = _this.openFullScreen.bind(_this), _this.closeFullScreen = _this.closeFullScreen.bind(_this), 
-                    _this;
+                    _this.handleFullScreenChange = _this.handleFullScreenChange.bind(_this), _this;
                 }
                 return function(subClass, superClass) {
                     if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -363,7 +363,9 @@
                             pointermove: this.handlePointerEvent,
                             pointerup: this.handlePointerEvent,
                             pointercancel: this.handlePointerEvent
-                        }, Object.keys(this.listeners).forEach(function(type) {
+                        }, [ "", "webkit", "moz", "ms" ].forEach(function(prefix) {
+                            _this2.listeners[prefix + "fullscreenchange"] = _this2.handleFullScreenChange;
+                        }), Object.keys(this.listeners).forEach(function(type) {
                             _this2.windowContext.addEventListener(type, _this2.listeners[type]);
                         }), this.loadAllImages();
                     }
@@ -1088,8 +1090,13 @@
                 }, {
                     key: "handleFullScreenButtonClick",
                     value: function() {
+                        this.state.isFullScreen ? this.closeFullScreen() : this.openFullScreen();
+                    }
+                }, {
+                    key: "handleFullScreenChange",
+                    value: function() {
                         var isFullScreen = this.state.isFullScreen;
-                        isFullScreen ? this.closeFullScreen() : this.openFullScreen(), this.setState({
+                        this.setState({
                             isFullScreen: !isFullScreen
                         });
                     }
@@ -1113,7 +1120,7 @@
                 }, {
                     key: "render",
                     value: function() {
-                        var _this16 = this, _props = this.props, animationDisabled = _props.animationDisabled, animationDuration = _props.animationDuration, clickOutsideToClose = _props.clickOutsideToClose, discourageDownloads = _props.discourageDownloads, enableZoom = _props.enableZoom, imageTitle = _props.imageTitle, nextSrc = _props.nextSrc, prevSrc = _props.prevSrc, toolbarButtons = _props.toolbarButtons, reactModalStyle = _props.reactModalStyle, _onAfterOpen = _props.onAfterOpen, imageCrossOrigin = _props.imageCrossOrigin, reactModalProps = _props.reactModalProps, sideBarWidth = _props.sideBarWidth, toolbarHeight = _props.toolbarHeight, enableFullScreen = _props.enableFullScreen, _state = this.state, zoomLevel = _state.zoomLevel, offsetX = _state.offsetX, offsetY = _state.offsetY, isClosing = _state.isClosing, loadErrorStatus = _state.loadErrorStatus, isFullScreen = _state.isFullScreen, boxSize = this.getLightboxRect(), transitionStyle = {};
+                        var _this16 = this, _props = this.props, animationDisabled = _props.animationDisabled, animationDuration = _props.animationDuration, clickOutsideToClose = _props.clickOutsideToClose, discourageDownloads = _props.discourageDownloads, enableZoom = _props.enableZoom, imageTitle = _props.imageTitle, nextSrc = _props.nextSrc, prevSrc = _props.prevSrc, toolbarButtons = _props.toolbarButtons, reactModalStyle = _props.reactModalStyle, _onAfterOpen = _props.onAfterOpen, imageCrossOrigin = _props.imageCrossOrigin, reactModalProps = _props.reactModalProps, sideBarWidth = _props.sideBarWidth, toolbarHeight = _props.toolbarHeight, enableFullScreen = _props.enableFullScreen, imageHolderStyle = _props.imageHolderStyle, _state = this.state, zoomLevel = _state.zoomLevel, offsetX = _state.offsetX, offsetY = _state.offsetY, isClosing = _state.isClosing, loadErrorStatus = _state.loadErrorStatus, isFullScreen = _state.isFullScreen, boxSize = this.getLightboxRect(), transitionStyle = {};
                         // Transition settings for sliding animations
                         !animationDisabled && this.isAnimating() && (transitionStyle = _extends({}, transitionStyle, {
                             transition: "transform " + animationDuration + "ms"
@@ -1255,6 +1262,7 @@
                             // eslint-disable-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
                             // Image holder
                             className: "ril-inner ril__inner",
+                            style: isFullScreen ? {} : imageHolderStyle,
                             onClick: clickOutsideToClose ? this.closeIfClickInner : void 0
                         }, images), prevSrc && _react2.default.createElement("button", {
                             // Move to previous image button
@@ -1449,7 +1457,8 @@
                 imageLoadErrorMessage: _propTypes2.default.node,
                 neverCloses: _propTypes2.default.bool,
                 enableFullScreen: _propTypes2.default.bool,
-                fullScreenLabel: _propTypes2.default.string
+                fullScreenLabel: _propTypes2.default.string,
+                imageHolderStyle: _propTypes2.default.object
             }, ReactImageLightbox.defaultProps = {
                 imageTitle: null,
                 imageCaption: null,
@@ -1487,6 +1496,7 @@
                 toolbarHeight: 0,
                 neverCloses: !1,
                 enableFullScreen: !0,
+                imageHolderStyle: {},
                 fullScreenLabel: "Toggle fullscreen"
             }, exports.default = ReactImageLightbox;
         }).call(this, __webpack_require__(0))
