@@ -110,6 +110,8 @@ class ReactImageLightbox extends Component {
 
       // image load error for srcType
       loadErrorStatus: {},
+
+      isFullScreen: false,
     };
 
     this.closeIfClickInner = this.closeIfClickInner.bind(this);
@@ -131,6 +133,9 @@ class ReactImageLightbox extends Component {
     this.requestClose = this.requestClose.bind(this);
     this.requestMoveNext = this.requestMoveNext.bind(this);
     this.requestMovePrev = this.requestMovePrev.bind(this);
+    this.handleFullScreenButtonClick = this.handleFullScreenButtonClick.bind(this);
+    this.openFullScreen = this.openFullScreen.bind(this);
+    this.closeFullScreen = this.closeFullScreen.bind(this);
   }
 
   componentWillMount() {
@@ -418,9 +423,13 @@ class ReactImageLightbox extends Component {
       return this.outerEl.getBoundingClientRect();
     }
 
+    const sideBarWidth = this.state.isFullScreen ? 0 : this.props.sideBarWidth;
+
+    const toolbarHeight = this.state.isFullScreen ? 0 : this.props.toolbarHeight;
+
     return {
-      width: getWindowWidth() - this.props.sideBarWidth,
-      height: getWindowHeight() - this.props.toolbarHeight,
+      width: getWindowWidth() - sideBarWidth,
+      height: getWindowHeight() - toolbarHeight,
       top: 0,
       right: 0,
       bottom: 0,
@@ -1254,6 +1263,46 @@ class ReactImageLightbox extends Component {
     this.requestMove('prev', event);
   }
 
+  handleFullScreenButtonClick() {
+    const { isFullScreen } = this.state;
+
+    if (isFullScreen) {
+      this.closeFullScreen();
+    } else {
+      this.openFullScreen();
+    }
+
+    this.setState({
+      isFullScreen: !isFullScreen,
+    });
+  }
+
+  openFullScreen() {
+    const elem = document.getElementsByClassName("ril-outer ril__outer ril__outerAnimating")[0];
+
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) { /* Firefox */
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE/Edge */
+      elem.msRequestFullscreen();
+    }
+  }
+
+  closeFullScreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  }
+
   render() {
     const {
       animationDisabled,
@@ -1271,6 +1320,7 @@ class ReactImageLightbox extends Component {
       reactModalProps,
       sideBarWidth,
       toolbarHeight,
+      enableFullScreen,
     } = this.props;
     const {
       zoomLevel,
@@ -1278,6 +1328,7 @@ class ReactImageLightbox extends Component {
       offsetY,
       isClosing,
       loadErrorStatus,
+      isFullScreen,
     } = this.state;
 
     const boxSize = this.getLightboxRect();
@@ -1311,8 +1362,8 @@ class ReactImageLightbox extends Component {
         ...ReactImageLightbox.getTransform({
           ...transforms,
           ...bestImageInfo,
-          sideBarWidth,
-          toolbarHeight,
+          sideBarWidth: isFullScreen ? 0 : sideBarWidth,
+          toolbarHeight: isFullScreen ? 0 : toolbarHeight,
         }),
       };
 
@@ -1528,6 +1579,24 @@ class ReactImageLightbox extends Component {
                     {button}
                   </li>
                 ))}
+
+              {enableFullScreen && (
+                <li className="ril-toolbar__item ril__toolbarItem">
+                  <button
+                    type="button"
+                    key="fullscreen"
+                    aria-label={this.props.fullScreenLabel}
+                    className={[
+                      'ril-zoom-in',
+                      'ril__toolbarItemChild',
+                      'ril__builtinButton',
+                      'ril__fullScreenButton',
+                    ].join(' ')}
+                    onClick={this.handleFullScreenButtonClick}
+                  />
+                </li>
+              )}
+
 
               {enableZoom && (
                 <li className="ril-toolbar__item ril__toolbarItem">
@@ -1762,6 +1831,10 @@ ReactImageLightbox.propTypes = {
   imageLoadErrorMessage: PropTypes.node,
 
   neverCloses: PropTypes.bool,
+
+  enableFullScreen: PropTypes.bool,
+
+  fullScreenLabel: PropTypes.string,
 };
 
 ReactImageLightbox.defaultProps = {
@@ -1800,6 +1873,8 @@ ReactImageLightbox.defaultProps = {
   sideBarWidth: 0,
   toolbarHeight: 0,
   neverCloses: false,
+  enableFullScreen: true,
+  fullScreenLabel: 'Toggle fullscreen',
 };
 
 export default ReactImageLightbox;
