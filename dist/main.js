@@ -184,7 +184,7 @@
                     return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                     Constructor;
                 };
-            }(), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _propTypes2 = _interopRequireDefault(__webpack_require__(4)), _reactModal2 = _interopRequireDefault(__webpack_require__(5)), _util = __webpack_require__(6), _constant = __webpack_require__(7);
+            }(), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _propTypes2 = _interopRequireDefault(__webpack_require__(4)), _reactModal2 = _interopRequireDefault(__webpack_require__(5)), _core = __webpack_require__(6), _util = __webpack_require__(7), _constant = __webpack_require__(8);
             function _interopRequireDefault(obj) {
                 return obj && obj.__esModule ? obj : {
                     default: obj
@@ -205,7 +205,7 @@
                     writable: !0
                 }) : obj[key] = value, obj;
             }
-            __webpack_require__(8);
+            __webpack_require__(9);
             var ReactImageLightbox = function(_Component) {
                 function ReactImageLightbox(props) {
                     !function(instance, Constructor) {
@@ -1296,14 +1296,24 @@
                             }, button);
                         }), enableFullScreen && _react2.default.createElement("li", {
                             className: "ril-toolbar__item ril__toolbarItem"
+                        }, _react2.default.createElement(_core.Tooltip, {
+                            title: this.props.fullScreenLabel,
+                            classes: {
+                                tooltip: this.props.tooltipClass
+                            }
                         }, _react2.default.createElement("button", {
                             type: "button",
                             key: "fullscreen",
                             "aria-label": this.props.fullScreenLabel,
                             className: [ "ril-zoom-in", "ril__toolbarItemChild", "ril__builtinButton", "ril__fullScreenButton" ].join(" "),
                             onClick: this.handleFullScreenButtonClick
-                        })), enableZoom && _react2.default.createElement("li", {
+                        }))), enableZoom && _react2.default.createElement("li", {
                             className: "ril-toolbar__item ril__toolbarItem"
+                        }, _react2.default.createElement(_core.Tooltip, {
+                            title: this.props.zoomInLabel,
+                            classes: {
+                                tooltip: this.props.tooltipClass
+                            }
                         }, _react2.default.createElement("button", {
                             // Lightbox zoom in button
                             type: "button",
@@ -1312,8 +1322,14 @@
                             className: [ "ril-zoom-in", "ril__toolbarItemChild", "ril__builtinButton", "ril__zoomInButton" ].concat(_toConsumableArray(zoomLevel === _constant.MAX_ZOOM_LEVEL ? [ "ril__builtinButtonDisabled" ] : [])).join(" "),
                             disabled: this.isAnimating() || zoomLevel === _constant.MAX_ZOOM_LEVEL,
                             onClick: this.isAnimating() || zoomLevel === _constant.MAX_ZOOM_LEVEL ? void 0 : this.handleZoomInButtonClick
-                        })), enableZoom && _react2.default.createElement("li", {
+                        }))), enableZoom && _react2.default.createElement("li", {
                             className: "ril-toolbar__item ril__toolbarItem"
+                        }, _react2.default.createElement(_core.Tooltip, {
+                            title: this.props.zoomOutLabel,
+                            classes: {
+                                tooltip: this.props.tooltipClass
+                            },
+                            disableHoverListener: this.isAnimating() || zoomLevel === _constant.MIN_ZOOM_LEVEL
                         }, _react2.default.createElement("button", {
                             // Lightbox zoom out button
                             type: "button",
@@ -1322,7 +1338,7 @@
                             className: [ "ril-zoom-out", "ril__toolbarItemChild", "ril__builtinButton", "ril__zoomOutButton" ].concat(_toConsumableArray(zoomLevel === _constant.MIN_ZOOM_LEVEL ? [ "ril__builtinButtonDisabled" ] : [])).join(" "),
                             disabled: this.isAnimating() || zoomLevel === _constant.MIN_ZOOM_LEVEL,
                             onClick: this.isAnimating() || zoomLevel === _constant.MIN_ZOOM_LEVEL ? void 0 : this.handleZoomOutButtonClick
-                        })), !this.props.neverCloses && _react2.default.createElement("li", {
+                        }))), !this.props.neverCloses && _react2.default.createElement("li", {
                             className: "ril-toolbar__item ril__toolbarItem"
                         }, _react2.default.createElement("button", {
                             // Lightbox close button
@@ -1458,7 +1474,8 @@
                 neverCloses: _propTypes2.default.bool,
                 enableFullScreen: _propTypes2.default.bool,
                 fullScreenLabel: _propTypes2.default.string,
-                imageHolderStyle: _propTypes2.default.object
+                imageHolderStyle: _propTypes2.default.object,
+                tooltipClass: _propTypes2.default.string
             }, ReactImageLightbox.defaultProps = {
                 imageTitle: null,
                 imageCaption: null,
@@ -1497,7 +1514,8 @@
                 neverCloses: !1,
                 enableFullScreen: !0,
                 imageHolderStyle: {},
-                fullScreenLabel: "Toggle fullscreen"
+                fullScreenLabel: "Toggle fullscreen",
+                tooltipClass: ""
             }, exports.default = ReactImageLightbox;
         }).call(this, __webpack_require__(0))
         /***/;
@@ -1515,6 +1533,10 @@
         module.exports = require("react-modal");
         /***/    }, 
     /* 6 */
+    /***/ function(module, exports) {
+        module.exports = require("@material-ui/core");
+        /***/    }, 
+    /* 7 */
     /***/ function(module, exports, __webpack_require__) {
         "use strict";
         /* WEBPACK VAR INJECTION */        
@@ -1558,7 +1580,7 @@
         }).call(this, __webpack_require__(0))
         /***/;
     }, 
-    /* 7 */
+    /* 8 */
     /***/ function(module, exports, __webpack_require__) {
         "use strict";
         Object.defineProperty(exports, "__esModule", {
@@ -1576,7 +1598,7 @@
         exports.SOURCE_POINTER = 3, exports.MIN_SWIPE_DISTANCE = 200;
         // Max image zoom level
         }, 
-    /* 8 */
+    /* 9 */
     /***/ function(module, exports) {
         // removed by extract-text-webpack-plugin
         /***/}

@@ -60,6 +60,7 @@
     "> 1%"
   ],
   "dependencies": {
+    "@material-ui/core": "^3.0.2",
     "prop-types": "^15.6.1",
     "react-modal": "^3.4.4"
   },

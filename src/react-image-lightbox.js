@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
+import { Tooltip } from '@material-ui/core';
+
 import {
   translate,
   getWindowWidth,
@@ -1594,73 +1596,91 @@ class ReactImageLightbox extends Component {
 
               {enableFullScreen && (
                 <li className="ril-toolbar__item ril__toolbarItem">
-                  <button
-                    type="button"
-                    key="fullscreen"
-                    aria-label={this.props.fullScreenLabel}
-                    className={[
-                      'ril-zoom-in',
-                      'ril__toolbarItemChild',
-                      'ril__builtinButton',
-                      'ril__fullScreenButton',
-                    ].join(' ')}
-                    onClick={this.handleFullScreenButtonClick}
-                  />
+                  <Tooltip
+                    title={this.props.fullScreenLabel}
+                    classes={{ tooltip: this.props.tooltipClass }}
+                  >
+                    <button
+                      type="button"
+                      key="fullscreen"
+                      aria-label={this.props.fullScreenLabel}
+                      className={[
+                        'ril-zoom-in',
+                        'ril__toolbarItemChild',
+                        'ril__builtinButton',
+                        'ril__fullScreenButton',
+                      ].join(' ')}
+                      onClick={this.handleFullScreenButtonClick}
+                    />
+                  </Tooltip>
                 </li>
               )}
 
 
               {enableZoom && (
                 <li className="ril-toolbar__item ril__toolbarItem">
-                  <button // Lightbox zoom in button
-                    type="button"
-                    key="zoom-in"
-                    aria-label={this.props.zoomInLabel}
-                    className={[
-                      'ril-zoom-in',
-                      'ril__toolbarItemChild',
-                      'ril__builtinButton',
-                      'ril__zoomInButton',
-                      ...(zoomLevel === MAX_ZOOM_LEVEL
-                        ? ['ril__builtinButtonDisabled']
-                        : []),
-                    ].join(' ')}
-                    disabled={
-                      this.isAnimating() || zoomLevel === MAX_ZOOM_LEVEL
-                    }
-                    onClick={
-                      !this.isAnimating() && zoomLevel !== MAX_ZOOM_LEVEL
-                        ? this.handleZoomInButtonClick
-                        : undefined
-                    }
-                  />
+                  <Tooltip
+                    title={this.props.zoomInLabel}
+                    classes={{ tooltip: this.props.tooltipClass }}
+                  >
+                    <button // Lightbox zoom in button
+                      type="button"
+                      key="zoom-in"
+                      aria-label={this.props.zoomInLabel}
+                      className={[
+                        'ril-zoom-in',
+                        'ril__toolbarItemChild',
+                        'ril__builtinButton',
+                        'ril__zoomInButton',
+                        ...(zoomLevel === MAX_ZOOM_LEVEL
+                          ? ['ril__builtinButtonDisabled']
+                          : []),
+                      ].join(' ')}
+                      disabled={
+                        this.isAnimating() || zoomLevel === MAX_ZOOM_LEVEL
+                      }
+                      onClick={
+                        !this.isAnimating() && zoomLevel !== MAX_ZOOM_LEVEL
+                          ? this.handleZoomInButtonClick
+                          : undefined
+                      }
+                    />
+                  </Tooltip>
                 </li>
               )}
 
               {enableZoom && (
                 <li className="ril-toolbar__item ril__toolbarItem">
-                  <button // Lightbox zoom out button
-                    type="button"
-                    key="zoom-out"
-                    aria-label={this.props.zoomOutLabel}
-                    className={[
-                      'ril-zoom-out',
-                      'ril__toolbarItemChild',
-                      'ril__builtinButton',
-                      'ril__zoomOutButton',
-                      ...(zoomLevel === MIN_ZOOM_LEVEL
-                        ? ['ril__builtinButtonDisabled']
-                        : []),
-                    ].join(' ')}
-                    disabled={
+                  <Tooltip
+                    title={this.props.zoomOutLabel}
+                    classes={{ tooltip: this.props.tooltipClass }}
+                    disableHoverListener={
                       this.isAnimating() || zoomLevel === MIN_ZOOM_LEVEL
                     }
-                    onClick={
-                      !this.isAnimating() && zoomLevel !== MIN_ZOOM_LEVEL
-                        ? this.handleZoomOutButtonClick
-                        : undefined
-                    }
-                  />
+                  >
+                    <button // Lightbox zoom out button
+                      type="button"
+                      key="zoom-out"
+                      aria-label={this.props.zoomOutLabel}
+                      className={[
+                        'ril-zoom-out',
+                        'ril__toolbarItemChild',
+                        'ril__builtinButton',
+                        'ril__zoomOutButton',
+                        ...(zoomLevel === MIN_ZOOM_LEVEL
+                          ? ['ril__builtinButtonDisabled']
+                          : []),
+                      ].join(' ')}
+                      disabled={
+                        this.isAnimating() || zoomLevel === MIN_ZOOM_LEVEL
+                      }
+                      onClick={
+                        !this.isAnimating() && zoomLevel !== MIN_ZOOM_LEVEL
+                          ? this.handleZoomOutButtonClick
+                          : undefined
+                      }
+                    />
+                  </Tooltip>
                 </li>
               )}
 
@@ -1849,6 +1869,8 @@ ReactImageLightbox.propTypes = {
   fullScreenLabel: PropTypes.string,
 
   imageHolderStyle: PropTypes.object,
+
+  tooltipClass: PropTypes.string,
 };
 
 ReactImageLightbox.defaultProps = {
@@ -1890,6 +1912,7 @@ ReactImageLightbox.defaultProps = {
   enableFullScreen: true,
   imageHolderStyle: {},
   fullScreenLabel: 'Toggle fullscreen',
+  tooltipClass: "",
 };
 
 export default ReactImageLightbox;
