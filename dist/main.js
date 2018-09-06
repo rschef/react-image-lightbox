@@ -1094,10 +1094,10 @@
                     }
                 }, {
                     key: "handleFullScreenChange",
-                    value: function() {
-                        var isFullScreen = this.state.isFullScreen;
+                    value: function(_ref13) {
+                        var nodeName = _ref13.target.nodeName, isFullScreen = this.state.isFullScreen;
                         this.setState({
-                            isFullScreen: !isFullScreen
+                            isFullScreen: "#document" !== nodeName && !isFullScreen
                         });
                     }
                 }, {
@@ -1127,8 +1127,8 @@
                         }));
                         // Key endings to differentiate between images with the same src
                                                 var keyEndings = {};
-                        this.getSrcTypes().forEach(function(_ref13) {
-                            var name = _ref13.name, keyEnding = _ref13.keyEnding;
+                        this.getSrcTypes().forEach(function(_ref14) {
+                            var name = _ref14.name, keyEnding = _ref14.keyEnding;
                             keyEndings[name] = keyEnding;
                         });
                         // Images to be displayed
@@ -1305,7 +1305,7 @@
                             type: "button",
                             key: "fullscreen",
                             "aria-label": this.props.fullScreenLabel,
-                            className: [ "ril-zoom-in", "ril__toolbarItemChild", "ril__builtinButton", "ril__fullScreenButton" ].join(" "),
+                            className: [ "ril-zoom-in", "ril__toolbarItemChild", "ril__builtinButton", isFullScreen ? "ril__disableFullScreenButton" : "ril__enableFullScreenButton" ].join(" "),
                             onClick: this.handleFullScreenButtonClick
                         }))), enableZoom && _react2.default.createElement("li", {
                             className: "ril-toolbar__item ril__toolbarItem"

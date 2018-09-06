@@ -1281,11 +1281,11 @@ class ReactImageLightbox extends Component {
     }
   }
 
-  handleFullScreenChange() {
+  handleFullScreenChange({ target: { nodeName } }) {
     const { isFullScreen } = this.state;
 
     this.setState({
-      isFullScreen: !isFullScreen,
+      isFullScreen: nodeName === "#document" ? false : !isFullScreen,
     });
   }
 
@@ -1608,7 +1608,7 @@ class ReactImageLightbox extends Component {
                         'ril-zoom-in',
                         'ril__toolbarItemChild',
                         'ril__builtinButton',
-                        'ril__fullScreenButton',
+                        isFullScreen ? 'ril__disableFullScreenButton' : 'ril__enableFullScreenButton',
                       ].join(' ')}
                       onClick={this.handleFullScreenButtonClick}
                     />
