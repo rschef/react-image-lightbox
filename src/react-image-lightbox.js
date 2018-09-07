@@ -80,6 +80,15 @@ class ReactImageLightbox extends Component {
     };
   }
 
+  static checkIsFullScreen() {
+    const heightMargin = 5;
+
+    return (
+      screen.width == window.innerWidth &&
+      Math.abs(screen.height - window.innerHeight) < heightMargin
+    );
+  }
+
   constructor(props) {
     super(props);
 
@@ -112,8 +121,6 @@ class ReactImageLightbox extends Component {
 
       // image load error for srcType
       loadErrorStatus: {},
-
-      isFullScreen: false,
     };
 
     this.closeIfClickInner = this.closeIfClickInner.bind(this);
@@ -138,7 +145,6 @@ class ReactImageLightbox extends Component {
     this.handleFullScreenButtonClick = this.handleFullScreenButtonClick.bind(this);
     this.openFullScreen = this.openFullScreen.bind(this);
     this.closeFullScreen = this.closeFullScreen.bind(this);
-    this.handleFullScreenChange = this.handleFullScreenChange.bind(this);
   }
 
   componentWillMount() {
@@ -218,12 +224,6 @@ class ReactImageLightbox extends Component {
       pointerup: this.handlePointerEvent,
       pointercancel: this.handlePointerEvent,
     };
-
-    ["", "webkit", "moz", "ms"].forEach(
-      prefix => {
-        this.listeners[prefix + "fullscreenchange"] = this.handleFullScreenChange;
-      }
-    );
 
     Object.keys(this.listeners).forEach(type => {
       this.windowContext.addEventListener(type, this.listeners[type]);
@@ -433,9 +433,11 @@ class ReactImageLightbox extends Component {
       return this.outerEl.getBoundingClientRect();
     }
 
-    const sideBarWidth = this.state.isFullScreen ? 0 : this.props.sideBarWidth;
+    const isFullScreen = ReactImageLightbox.checkIsFullScreen();
 
-    const toolbarHeight = this.state.isFullScreen ? 0 : this.props.toolbarHeight;
+    const sideBarWidth = isFullScreen ? 0 : this.props.sideBarWidth;
+
+    const toolbarHeight = isFullScreen ? 0 : this.props.toolbarHeight;
 
     return {
       width: getWindowWidth() - sideBarWidth,
@@ -1274,19 +1276,13 @@ class ReactImageLightbox extends Component {
   }
 
   handleFullScreenButtonClick() {
-    if (this.state.isFullScreen) {
+    const isFullScreen = ReactImageLightbox.checkIsFullScreen();
+
+    if (isFullScreen) {
       this.closeFullScreen();
     } else {
       this.openFullScreen();
     }
-  }
-
-  handleFullScreenChange({ target: { nodeName } }) {
-    const { isFullScreen } = this.state;
-
-    this.setState({
-      isFullScreen: nodeName === "#document" ? false : !isFullScreen,
-    });
   }
 
   openFullScreen() {
@@ -1341,8 +1337,9 @@ class ReactImageLightbox extends Component {
       offsetY,
       isClosing,
       loadErrorStatus,
-      isFullScreen,
     } = this.state;
+
+    const isFullScreen = ReactImageLightbox.checkIsFullScreen();
 
     const boxSize = this.getLightboxRect();
     let transitionStyle = {};

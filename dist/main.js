@@ -237,8 +237,7 @@
                         // Vertical offset from center
                         offsetY: 0,
                         // image load error for srcType
-                        loadErrorStatus: {},
-                        isFullScreen: !1
+                        loadErrorStatus: {}
                     }, _this.closeIfClickInner = _this.closeIfClickInner.bind(_this), _this.handleImageDoubleClick = _this.handleImageDoubleClick.bind(_this), 
                     _this.handleImageMouseWheel = _this.handleImageMouseWheel.bind(_this), _this.handleKeyInput = _this.handleKeyInput.bind(_this), 
                     _this.handleMouseUp = _this.handleMouseUp.bind(_this), _this.handleMouseDown = _this.handleMouseDown.bind(_this), 
@@ -250,7 +249,7 @@
                     _this.requestClose = _this.requestClose.bind(_this), _this.requestMoveNext = _this.requestMoveNext.bind(_this), 
                     _this.requestMovePrev = _this.requestMovePrev.bind(_this), _this.handleFullScreenButtonClick = _this.handleFullScreenButtonClick.bind(_this), 
                     _this.openFullScreen = _this.openFullScreen.bind(_this), _this.closeFullScreen = _this.closeFullScreen.bind(_this), 
-                    _this.handleFullScreenChange = _this.handleFullScreenChange.bind(_this), _this;
+                    _this;
                 }
                 return function(subClass, superClass) {
                     if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -309,6 +308,11 @@
                             transform: "translate3d(" + nextX + "px," + y + "px,0) scale3d(" + scaleFactor + "," + scaleFactor + ",1)"
                         };
                     }
+                }, {
+                    key: "checkIsFullScreen",
+                    value: function() {
+                        return screen.width == window.innerWidth && Math.abs(screen.height - window.innerHeight) < 5;
+                    }
                 } ]), _createClass(ReactImageLightbox, [ {
                     key: "componentWillMount",
                     value: function() {
@@ -363,9 +367,7 @@
                             pointermove: this.handlePointerEvent,
                             pointerup: this.handlePointerEvent,
                             pointercancel: this.handlePointerEvent
-                        }, [ "", "webkit", "moz", "ms" ].forEach(function(prefix) {
-                            _this2.listeners[prefix + "fullscreenchange"] = _this2.handleFullScreenChange;
-                        }), Object.keys(this.listeners).forEach(function(type) {
+                        }, Object.keys(this.listeners).forEach(function(type) {
                             _this2.windowContext.addEventListener(type, _this2.listeners[type]);
                         }), this.loadAllImages();
                     }
@@ -522,7 +524,7 @@
                     key: "getLightboxRect",
                     value: function() {
                         if (this.outerEl) return this.outerEl.getBoundingClientRect();
-                        var sideBarWidth = this.state.isFullScreen ? 0 : this.props.sideBarWidth, toolbarHeight = this.state.isFullScreen ? 0 : this.props.toolbarHeight;
+                        var isFullScreen = ReactImageLightbox.checkIsFullScreen(), sideBarWidth = isFullScreen ? 0 : this.props.sideBarWidth, toolbarHeight = isFullScreen ? 0 : this.props.toolbarHeight;
                         return {
                             width: (0, _util.getWindowWidth)() - sideBarWidth,
                             height: (0, _util.getWindowHeight)() - toolbarHeight,
@@ -1090,15 +1092,7 @@
                 }, {
                     key: "handleFullScreenButtonClick",
                     value: function() {
-                        this.state.isFullScreen ? this.closeFullScreen() : this.openFullScreen();
-                    }
-                }, {
-                    key: "handleFullScreenChange",
-                    value: function(_ref13) {
-                        var nodeName = _ref13.target.nodeName, isFullScreen = this.state.isFullScreen;
-                        this.setState({
-                            isFullScreen: "#document" !== nodeName && !isFullScreen
-                        });
+                        ReactImageLightbox.checkIsFullScreen() ? this.closeFullScreen() : this.openFullScreen();
                     }
                 }, {
                     key: "openFullScreen",
@@ -1120,15 +1114,15 @@
                 }, {
                     key: "render",
                     value: function() {
-                        var _this16 = this, _props = this.props, animationDisabled = _props.animationDisabled, animationDuration = _props.animationDuration, clickOutsideToClose = _props.clickOutsideToClose, discourageDownloads = _props.discourageDownloads, enableZoom = _props.enableZoom, imageTitle = _props.imageTitle, nextSrc = _props.nextSrc, prevSrc = _props.prevSrc, toolbarButtons = _props.toolbarButtons, reactModalStyle = _props.reactModalStyle, _onAfterOpen = _props.onAfterOpen, imageCrossOrigin = _props.imageCrossOrigin, reactModalProps = _props.reactModalProps, sideBarWidth = _props.sideBarWidth, toolbarHeight = _props.toolbarHeight, enableFullScreen = _props.enableFullScreen, imageHolderStyle = _props.imageHolderStyle, _state = this.state, zoomLevel = _state.zoomLevel, offsetX = _state.offsetX, offsetY = _state.offsetY, isClosing = _state.isClosing, loadErrorStatus = _state.loadErrorStatus, isFullScreen = _state.isFullScreen, boxSize = this.getLightboxRect(), transitionStyle = {};
+                        var _this16 = this, _props = this.props, animationDisabled = _props.animationDisabled, animationDuration = _props.animationDuration, clickOutsideToClose = _props.clickOutsideToClose, discourageDownloads = _props.discourageDownloads, enableZoom = _props.enableZoom, imageTitle = _props.imageTitle, nextSrc = _props.nextSrc, prevSrc = _props.prevSrc, toolbarButtons = _props.toolbarButtons, reactModalStyle = _props.reactModalStyle, _onAfterOpen = _props.onAfterOpen, imageCrossOrigin = _props.imageCrossOrigin, reactModalProps = _props.reactModalProps, sideBarWidth = _props.sideBarWidth, toolbarHeight = _props.toolbarHeight, enableFullScreen = _props.enableFullScreen, imageHolderStyle = _props.imageHolderStyle, _state = this.state, zoomLevel = _state.zoomLevel, offsetX = _state.offsetX, offsetY = _state.offsetY, isClosing = _state.isClosing, loadErrorStatus = _state.loadErrorStatus, isFullScreen = ReactImageLightbox.checkIsFullScreen(), boxSize = this.getLightboxRect(), transitionStyle = {};
                         // Transition settings for sliding animations
                         !animationDisabled && this.isAnimating() && (transitionStyle = _extends({}, transitionStyle, {
                             transition: "transform " + animationDuration + "ms"
                         }));
                         // Key endings to differentiate between images with the same src
                                                 var keyEndings = {};
-                        this.getSrcTypes().forEach(function(_ref14) {
-                            var name = _ref14.name, keyEnding = _ref14.keyEnding;
+                        this.getSrcTypes().forEach(function(_ref13) {
+                            var name = _ref13.name, keyEnding = _ref13.keyEnding;
                             keyEndings[name] = keyEnding;
                         });
                         // Images to be displayed
