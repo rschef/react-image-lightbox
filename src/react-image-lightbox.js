@@ -1620,28 +1620,31 @@ class ReactImageLightbox extends Component {
                     title={this.props.zoomInLabel}
                     classes={{ tooltip: this.props.tooltipClass }}
                   >
-                    <button // Lightbox zoom in button
-                      type="button"
-                      key="zoom-in"
-                      aria-label={this.props.zoomInLabel}
-                      className={[
-                        'ril-zoom-in',
-                        'ril__toolbarItemChild',
-                        'ril__builtinButton',
-                        'ril__zoomInButton',
-                        ...(zoomLevel === MAX_ZOOM_LEVEL
-                          ? ['ril__builtinButtonDisabled']
-                          : []),
-                      ].join(' ')}
+                    <div
                       disabled={
                         this.isAnimating() || zoomLevel === MAX_ZOOM_LEVEL
                       }
-                      onClick={
-                        !this.isAnimating() && zoomLevel !== MAX_ZOOM_LEVEL
-                          ? this.handleZoomInButtonClick
-                          : undefined
-                      }
-                    />
+                    >
+                      <button // Lightbox zoom in button
+                        type="button"
+                        key="zoom-in"
+                        aria-label={this.props.zoomInLabel}
+                        className={[
+                          'ril-zoom-in',
+                          'ril__toolbarItemChild',
+                          'ril__builtinButton',
+                          'ril__zoomInButton',
+                          ...(zoomLevel === MAX_ZOOM_LEVEL
+                            ? ['ril__builtinButtonDisabled']
+                            : []),
+                        ].join(' ')}
+                        onClick={
+                          !this.isAnimating() && zoomLevel !== MAX_ZOOM_LEVEL
+                            ? this.handleZoomInButtonClick
+                            : undefined
+                        }
+                      />
+                    </div>
                   </Tooltip>
                 </li>
               )}
@@ -1655,28 +1658,32 @@ class ReactImageLightbox extends Component {
                       this.isAnimating() || zoomLevel === MIN_ZOOM_LEVEL
                     }
                   >
-                    <button // Lightbox zoom out button
-                      type="button"
-                      key="zoom-out"
-                      aria-label={this.props.zoomOutLabel}
-                      className={[
-                        'ril-zoom-out',
-                        'ril__toolbarItemChild',
-                        'ril__builtinButton',
-                        'ril__zoomOutButton',
-                        ...(zoomLevel === MIN_ZOOM_LEVEL
-                          ? ['ril__builtinButtonDisabled']
-                          : []),
-                      ].join(' ')}
+                    <div
                       disabled={
                         this.isAnimating() || zoomLevel === MIN_ZOOM_LEVEL
                       }
-                      onClick={
-                        !this.isAnimating() && zoomLevel !== MIN_ZOOM_LEVEL
-                          ? this.handleZoomOutButtonClick
-                          : undefined
-                      }
-                    />
+                    >
+                      <button // Lightbox zoom out button
+                        type="button"
+                        key="zoom-out"
+                        aria-label={this.props.zoomOutLabel}
+                        className={[
+                          'ril-zoom-out',
+                          'ril__toolbarItemChild',
+                          'ril__builtinButton',
+                          'ril__zoomOutButton',
+                          ...(zoomLevel === MIN_ZOOM_LEVEL
+                            ? ['ril__builtinButtonDisabled']
+                            : []),
+                        ].join(' ')}
+
+                        onClick={
+                          !this.isAnimating() && zoomLevel !== MIN_ZOOM_LEVEL
+                            ? this.handleZoomOutButtonClick
+                            : undefined
+                        }
+                      />
+                    </div>
                   </Tooltip>
                 </li>
               )}
